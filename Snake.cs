@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    enum Direction { 
-        Up,
-        Down,
-        Left,
-        Right
-    }
     class Snake
     {
         public List<Point> Tail = new List<Point>();

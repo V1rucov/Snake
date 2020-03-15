@@ -14,20 +14,28 @@ namespace Snake
             FoodGenerator.GenerateNewFood();
             Snake Player = new Snake();
             Player.GrowthUp();
-            Player.GrowthUp();
-            Player.GrowthUp();
             Player.DrawSnake();
+            bool IsCrashed = false;
+            int Score = 0;
 
             while (true) {
                 for (int i =0; i<Player.Tail.Count;i++) {
                     if (Player.Head==Player.Tail[i]) {
                         Console.WriteLine("Game over!");
-                        break;
+                        Console.WriteLine("Your score is "+Score);
+                        IsCrashed = true;
                     }
                 }
+                if (Player.Head.x == 0 || Player.Head.x == 49 || Player.Head.y == 0 || Player.Head.y == 20) { 
+                    IsCrashed = true;
+                    Console.WriteLine("Game over!");
+                    Console.WriteLine("Your score is " + Score);
+                }
+                if (IsCrashed) break;
                 if (Player.Head==FoodGenerator.Food) {
                     FoodGenerator.GenerateNewFood();
                     Player.GrowthUp();
+                    Score++;
                 }
                 var KeyType = Console.ReadKey();
                 string alpha = KeyType.Key.ToString();
