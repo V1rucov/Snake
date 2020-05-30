@@ -2,23 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Snake
 {
     partial class Program
     {
+        static volatile string alpha;
+        static volatile Snake Player = new Snake();
+        static volatile bool IsCrashed = false;
+
         static void Main(string[] args)
         {
+            int speed = 200;
             Walls();
             FoodGenerator.GenerateNewFood();
-            Snake Player = new Snake();
             Player.GrowthUp();
             Player.DrawSnake();
-            bool IsCrashed = false;
             int Score = 0;
 
-            while (true) {
+            Thread ChangeKeyy = new Thread(changeKey);
+            ChangeKeyy.Start();
+
+            while (!IsCrashed) {
                 for (int i =0; i<Player.Tail.Count;i++) {
                     if (Player.Head==Player.Tail[i]) {
                         Console.WriteLine("Game over!");
@@ -31,39 +38,46 @@ namespace Snake
                     Console.WriteLine("Game over!");
                     Console.WriteLine("Your score is " + Score);
                 }
-                if (IsCrashed) break;
+                //if (IsCrashed) break;
                 if (Player.Head==FoodGenerator.Food) {
                     FoodGenerator.GenerateNewFood();
                     Player.GrowthUp();
                     Score++;
+                    speed = speed -10;
                 }
-                var KeyType = Console.ReadKey();
-                string alpha = KeyType.Key.ToString();
+                Thread.Sleep(speed);
                 switch (alpha)
                 {
-                    case "UpArrow":
-                        Player.Move();
-                        Player.Head.y--;
-                        Player.DrawSnake();
-                        break;
-                    case "DownArrow":
-                        Player.Move();
-                        Player.Head.y++;
-                        Player.DrawSnake();
-                        break;
-                    case "RightArrow":
-                        Player.Move();
-                        Player.Head.x++;
-                        Player.DrawSnake();
-                        break;
-                    case "LeftArrow":
-                        Player.Move();
-                        Player.Head.x--;
-                        Player.DrawSnake();
-                        break;
+                case "UpArrow":
+                    Player.Move();
+                    Player.Head.y--;
+                    Player.DrawSnake();
+                    break;
+                case "DownArrow":
+                    Player.Move();
+                    Player.Head.y++;
+                    Player.DrawSnake();
+                    break;
+                case "RightArrow":
+                    Player.Move();
+                    Player.Head.x++;
+                    Player.DrawSnake();
+                    break;
+                case "LeftArrow":
+                    Player.Move();
+                    Player.Head.x--;
+                    Player.DrawSnake();
+                    break;
                 }
             }
             Console.ReadKey();
+        }
+        static void changeKey(){
+            while(!IsCrashed){
+
+                var KeyType = Console.ReadKey();
+                alpha = KeyType.Key.ToString();
+            }
         }
     }
 }
