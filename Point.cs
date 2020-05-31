@@ -18,8 +18,13 @@ namespace Snake
             this.CH = CH;
         }
         private void DrawPoint(char CH) {
-            Console.SetCursorPosition(x, y);
-            Console.Write(CH);
+            try{
+                Console.SetCursorPosition(x, y);
+                Console.Write(CH);
+            }
+            catch{
+                Program.GameOver();
+            }
         }
         public void Draw() {
             DrawPoint(CH);

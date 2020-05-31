@@ -16,9 +16,7 @@ namespace Snake
             Tail.Add(z);
         }
         public void DrawSnake() {
-            //голова
             Head.Draw();
-            //хвост
             foreach (Point p in Tail)
             {
                 p.Draw();
@@ -31,20 +29,16 @@ namespace Snake
         }
         public void Move() {
             Head.Clear();
-            //копируем хвост
             List<Point> temp = new List<Point>();
             for (int i = 0;i<Tail.Count;i++) {
                 Point copy = new Point(Tail[i].x,Tail[i].y,'*');
                 temp.Add(copy);
             }
-            //смещение всего на 1 пункт
             Tail[0] = Tail[0] + Head;
             for (int i = 1; i<Tail.Count;i++) {
                 Tail[i].Clear();
                 Tail[i] = Tail[i] + temp[i - 1];
             }
-            //Head.y--;
-            //DrawSnake();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Snake
         static volatile string alpha;
         static volatile Snake Player = new Snake();
         static volatile bool IsCrashed = false;
+        public static int Score = 0;
 
         static void Main(string[] args)
         {
@@ -20,7 +22,6 @@ namespace Snake
             FoodGenerator.GenerateNewFood();
             Player.GrowthUp();
             Player.DrawSnake();
-            int Score = 0;
 
             Thread ChangeKeyy = new Thread(changeKey);
             ChangeKeyy.Start();
@@ -28,17 +29,14 @@ namespace Snake
             while (!IsCrashed) {
                 for (int i =0; i<Player.Tail.Count;i++) {
                     if (Player.Head==Player.Tail[i]) {
-                        Console.WriteLine("Game over!");
-                        Console.WriteLine("Your score is "+Score);
                         IsCrashed = true;
+                        GameOver();
                     }
                 }
-                if (Player.Head.x == 0 || Player.Head.x == 49 || Player.Head.y == 0 || Player.Head.y == 20) { 
+                if(Player.Head.x==0 ||Player.Head.x==49 ||Player.Head.y==0 ||Player.Head.y==20){
                     IsCrashed = true;
-                    Console.WriteLine("Game over!");
-                    Console.WriteLine("Your score is " + Score);
+                    GameOver();
                 }
-                //if (IsCrashed) break;
                 if (Player.Head==FoodGenerator.Food) {
                     FoodGenerator.GenerateNewFood();
                     Player.GrowthUp();
@@ -70,7 +68,7 @@ namespace Snake
                     break;
                 }
             }
-            Console.ReadKey();
+            GameOver();
         }
         static void changeKey(){
             while(!IsCrashed){
@@ -78,6 +76,13 @@ namespace Snake
                 var KeyType = Console.ReadKey();
                 alpha = KeyType.Key.ToString();
             }
+        }
+        public static void GameOver(){
+            Console.SetCursorPosition(10,10);
+            Console.WriteLine("Game over!");
+            Console.WriteLine("         Your score is "+Program.Score);
+            Console.ReadKey();
+            Environment.Exit(0);
         }
     }
 }
